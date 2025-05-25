@@ -1,14 +1,73 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { DeviceFrame } from './DeviceFrame';
+import { ArtisticMockup } from './ArtisticMockup';
+import { Switch } from './ui/switch';
+import { Grid3X3, Layers3 } from 'lucide-react';
 
 interface DevicePreviewProps {
   url: string;
 }
 
 export const DevicePreview = ({ url }: DevicePreviewProps) => {
+  const [isArtisticView, setIsArtisticView] = useState(false);
+
+  if (isArtisticView) {
+    return (
+      <div className="w-full">
+        {/* View Toggle */}
+        <div className="flex justify-center mb-8">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 text-gray-600">
+                <Grid3X3 size={20} />
+                <span className="text-sm font-medium">عرض شبكي</span>
+              </div>
+              
+              <Switch
+                checked={isArtisticView}
+                onCheckedChange={setIsArtisticView}
+                className="data-[state=checked]:bg-purple-600"
+              />
+              
+              <div className="flex items-center gap-2 text-purple-600">
+                <Layers3 size={20} />
+                <span className="text-sm font-medium">عرض فني</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ArtisticMockup url={url} />
+      </div>
+    );
+  }
+
   return (
     <div className="w-full">
+      {/* View Toggle */}
+      <div className="flex justify-center mb-8">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 text-blue-600">
+              <Grid3X3 size={20} />
+              <span className="text-sm font-medium">عرض شبكي</span>
+            </div>
+            
+            <Switch
+              checked={isArtisticView}
+              onCheckedChange={setIsArtisticView}
+              className="data-[state=checked]:bg-purple-600"
+            />
+            
+            <div className="flex items-center gap-2 text-gray-600">
+              <Layers3 size={20} />
+              <span className="text-sm font-medium">عرض فني</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Hero Section */}
       <div className="text-center mb-12">
         <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-4">
