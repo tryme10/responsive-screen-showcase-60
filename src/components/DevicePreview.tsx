@@ -8,17 +8,17 @@ interface DevicePreviewProps {
 
 export const DevicePreview = ({ url }: DevicePreviewProps) => {
   return (
-    <div className="space-y-12">
+    <div className="space-y-16">
       {/* Mobile and Tablet Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-12 justify-items-center">
         {/* iPhone 15 Pro */}
         <div className="flex justify-center">
           <DeviceFrame
             type="mobile"
             url={url}
             deviceName="iPhone 15 Pro"
-            width={375}
-            height={812}
+            width={420}
+            height={912}
           />
         </div>
         
