@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { DeviceFrame } from './DeviceFrame';
 import { ArtisticMockup } from './ArtisticMockup';

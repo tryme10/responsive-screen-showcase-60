@@ -23,53 +23,57 @@ export const ArtisticMockup = ({ url }: ArtisticMockupProps) => {
         </p>
       </div>
 
-      {/* Artistic Mockup Container */}
-      <div className="relative">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 rounded-3xl -z-10"></div>
-        
-        <div className="relative w-full max-w-6xl mx-auto px-8 py-16 overflow-hidden" style={{ minHeight: '600px' }}>
+      {/* Screenshot-Ready Mockup Container */}
+      <div className="relative mx-auto" style={{ maxWidth: '1200px' }}>
+        {/* Clean Neutral Background */}
+        <div className="relative bg-gradient-to-br from-slate-50 to-gray-100 rounded-3xl p-16 overflow-hidden">
           
-          {/* Desktop/Laptop - Background Layer */}
-          <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-10">
-            <MockupDeviceFrame
-              type="laptop"
-              url={url}
-              deviceName="MacBook Pro"
-              width={1280}
-              height={800}
-              scale={0.4}
-            />
+          {/* Subtle Background Pattern */}
+          <div className="absolute inset-0 opacity-30">
+            <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-1/4 right-1/4 w-40 h-40 bg-gradient-to-br from-pink-100 to-orange-100 rounded-full blur-3xl"></div>
           </div>
 
-          {/* Tablet - Middle Layer */}
-          <div className="absolute top-20 right-8 md:right-16 z-20 transform rotate-12">
-            <MockupDeviceFrame
-              type="tablet"
-              url={url}
-              deviceName="iPad Pro"
-              width={768}
-              height={1024}
-              scale={0.35}
-            />
-          </div>
+          {/* Device Layout Container */}
+          <div className="relative flex items-center justify-center min-h-[500px]">
+            
+            {/* Laptop - Background Layer (Center-Left) */}
+            <div className="absolute z-10 transform -translate-x-16">
+              <MockupDeviceFrame
+                type="laptop"
+                url={url}
+                deviceName="MacBook Pro"
+                width={1280}
+                height={800}
+                scale={0.35}
+              />
+            </div>
 
-          {/* Mobile - Front Layer */}
-          <div className="absolute top-32 left-8 md:left-24 z-30 transform -rotate-12">
-            <MockupDeviceFrame
-              type="mobile"
-              url={url}
-              deviceName="iPhone 15 Pro"
-              width={420}
-              height={912}
-              scale={0.45}
-            />
-          </div>
+            {/* Tablet - Middle Layer (Center-Right with rotation) */}
+            <div className="absolute z-20 transform translate-x-20 translate-y-8 rotate-6">
+              <MockupDeviceFrame
+                type="tablet"
+                url={url}
+                deviceName="iPad Pro"
+                width={768}
+                height={1024}
+                scale={0.32}
+              />
+            </div>
 
-          {/* Decorative Elements */}
-          <div className="absolute top-12 right-4 w-20 h-20 bg-gradient-to-br from-blue-200 to-purple-200 rounded-full opacity-50 blur-xl"></div>
-          <div className="absolute bottom-12 left-4 w-32 h-32 bg-gradient-to-br from-pink-200 to-orange-200 rounded-full opacity-30 blur-2xl"></div>
-          <div className="absolute top-1/2 left-1/2 w-16 h-16 bg-gradient-to-br from-green-200 to-blue-200 rounded-full opacity-40 blur-lg transform -translate-x-1/2 -translate-y-1/2"></div>
+            {/* Mobile - Front Layer (Front-Center with counter-rotation) */}
+            <div className="absolute z-30 transform translate-x-4 -translate-y-4 -rotate-3">
+              <MockupDeviceFrame
+                type="mobile"
+                url={url}
+                deviceName="iPhone 15 Pro"
+                width={420}
+                height={912}
+                scale={0.42}
+              />
+            </div>
+
+          </div>
         </div>
       </div>
 
