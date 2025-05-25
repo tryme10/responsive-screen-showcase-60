@@ -41,9 +41,12 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
           screen: 'rounded-[2rem] overflow-hidden bg-white relative',
           containerWidth: 'w-[200px]',
           containerHeight: 'h-[400px]',
-          iframeWidth: width,
-          iframeHeight: height,
-          scale: 0.45
+          // الأبعاد الحقيقية للشاشة
+          viewportWidth: width,
+          viewportHeight: height,
+          // الأبعاد المرئية بعد التصغير
+          displayWidth: 184, // 200px - padding
+          displayHeight: 384, // 400px - padding
         };
       case 'tablet':
         return {
@@ -51,9 +54,10 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
           screen: 'rounded-xl overflow-hidden bg-white',
           containerWidth: 'w-[280px]',
           containerHeight: 'h-[370px]',
-          iframeWidth: width,
-          iframeHeight: height,
-          scale: 0.35
+          viewportWidth: width,
+          viewportHeight: height,
+          displayWidth: 256, // 280px - padding
+          displayHeight: 346, // 370px - padding
         };
       case 'laptop':
         return {
@@ -61,9 +65,10 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
           screen: 'rounded-lg overflow-hidden bg-white',
           containerWidth: 'w-[400px]',
           containerHeight: 'h-[250px]',
-          iframeWidth: width,
-          iframeHeight: height,
-          scale: 0.3
+          viewportWidth: width,
+          viewportHeight: height,
+          displayWidth: 384, // 400px - padding
+          displayHeight: 226, // 250px - padding
         };
       case 'desktop':
         return {
@@ -71,9 +76,10 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
           screen: 'rounded-md overflow-hidden bg-white',
           containerWidth: 'w-[500px]',
           containerHeight: 'h-[280px]',
-          iframeWidth: width,
-          iframeHeight: height,
-          scale: 0.25
+          viewportWidth: width,
+          viewportHeight: height,
+          displayWidth: 476, // 500px - padding
+          displayHeight: 256, // 280px - padding
         };
       default:
         return {
@@ -81,14 +87,23 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
           screen: 'rounded-lg overflow-hidden bg-white',
           containerWidth: 'w-[300px]',
           containerHeight: 'h-[200px]',
-          iframeWidth: width,
-          iframeHeight: height,
-          scale: 0.3
+          viewportWidth: width,
+          viewportHeight: height,
+          displayWidth: 284,
+          displayHeight: 184,
         };
     }
   };
 
   const styles = getDeviceStyles();
+  
+  // حساب نسبة التصغير بناء على العرض
+  const scaleX = styles.displayWidth / styles.viewportWidth;
+  const scaleY = styles.displayHeight / styles.viewportHeight;
+  // استخدم أصغر نسبة للحفاظ على النسب الأصلية
+  const scale = Math.min(scaleX, scaleY);
+
+  console.log(`${type} - Display: ${styles.displayWidth}x${styles.displayHeight}, Viewport: ${styles.viewportWidth}x${styles.viewportHeight}, Scale: ${scale}`);
 
   return (
     <div className="flex flex-col items-center">
@@ -131,7 +146,7 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
           <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-3 bg-gray-700 rounded-b-xl"></div>
         )}
 
-        <div className={`${styles.screen} w-full h-full relative overflow-hidden`}>
+        <div className={`${styles.screen} w-full h-full relative`}>
           {isLoading && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-100 z-20">
               <div className="text-center">
@@ -155,16 +170,24 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
             </div>
           )}
 
-          <div className="w-full h-full flex items-center justify-center">
+          {/* الحاوي الذي يحدد المساحة المرئية */}
+          <div 
+            className="w-full h-full overflow-hidden relative"
+            style={{
+              width: `${styles.displayWidth}px`,
+              height: `${styles.displayHeight}px`,
+            }}
+          >
+            {/* الـ iframe بالحجم الحقيقي مع التصغير */}
             <iframe
               id={`iframe-${type}`}
               src={url}
-              className="border-0 bg-white origin-top-left"
+              className="border-0 bg-white absolute top-0 left-0"
               style={{
-                width: `${styles.iframeWidth}px`,
-                height: `${styles.iframeHeight}px`,
-                transform: `scale(${styles.scale})`,
-                transformOrigin: 'top left'
+                width: `${styles.viewportWidth}px`,
+                height: `${styles.viewportHeight}px`,
+                transform: `scale(${scale})`,
+                transformOrigin: 'top left',
               }}
               onLoad={handleLoad}
               onError={handleError}
