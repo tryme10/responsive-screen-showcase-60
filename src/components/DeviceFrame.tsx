@@ -33,85 +33,77 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
     }
   };
 
-  const getDeviceStyles = () => {
+  const getDeviceConfig = () => {
     switch (type) {
       case 'mobile':
         return {
-          container: 'bg-gradient-to-b from-gray-800 to-gray-900 rounded-[2.5rem] p-2 shadow-2xl relative border-2 border-gray-700',
-          screen: 'rounded-[2rem] overflow-hidden bg-black relative',
-          containerWidth: 'w-[220px]',
-          containerHeight: 'h-[440px]',
-          viewportWidth: width,
-          viewportHeight: height,
-          displayWidth: 200, // 220px - padding
-          displayHeight: 420, // 440px - padding
+          // Container styling
+          containerClass: 'bg-gradient-to-b from-gray-800 to-gray-900 rounded-[2.5rem] shadow-2xl relative border-2 border-gray-700',
+          screenClass: 'rounded-[2rem] overflow-hidden bg-black relative',
+          
+          // Target display size (how big the device frame should be)
+          targetWidth: 220,
+          targetHeight: 440,
+          
+          // Device frame decorations
           hasNotch: true,
           hasHomeIndicator: true,
+          framePadding: 10, // padding around the screen inside the device frame
         };
       case 'tablet':
         return {
-          container: 'bg-gradient-to-b from-gray-200 to-gray-300 rounded-2xl p-4 shadow-2xl relative border border-gray-300',
-          screen: 'rounded-xl overflow-hidden bg-black shadow-inner',
-          containerWidth: 'w-[320px]',
-          containerHeight: 'h-[420px]',
-          viewportWidth: width,
-          viewportHeight: height,
-          displayWidth: 288, // 320px - padding
-          displayHeight: 388, // 420px - padding
-          hasNotch: false,
+          containerClass: 'bg-gradient-to-b from-gray-200 to-gray-300 rounded-2xl shadow-2xl relative border border-gray-300',
+          screenClass: 'rounded-xl overflow-hidden bg-black shadow-inner',
+          targetWidth: 320,
+          targetHeight: 420,
           hasHomeIndicator: true,
+          framePadding: 16,
         };
       case 'laptop':
         return {
-          container: 'bg-gradient-to-b from-gray-300 to-gray-400 rounded-t-2xl rounded-b-3xl p-3 pb-8 shadow-2xl relative border border-gray-400',
-          screen: 'rounded-lg overflow-hidden bg-black shadow-inner border border-gray-600',
-          containerWidth: 'w-[450px]',
-          containerHeight: 'h-[280px]',
-          viewportWidth: width,
-          viewportHeight: height,
-          displayWidth: 438, // 450px - padding
-          displayHeight: 254, // 280px - padding
-          hasNotch: false,
-          hasHomeIndicator: false,
+          containerClass: 'bg-gradient-to-b from-gray-300 to-gray-400 rounded-t-2xl rounded-b-3xl shadow-2xl relative border border-gray-400',
+          screenClass: 'rounded-lg overflow-hidden bg-black shadow-inner border border-gray-600',
+          targetWidth: 450,
+          targetHeight: 280,
           hasKeyboard: true,
+          framePadding: 12,
         };
       case 'desktop':
         return {
-          container: 'bg-gradient-to-b from-gray-800 to-gray-900 rounded-lg p-4 shadow-2xl relative border border-gray-700',
-          screen: 'rounded-md overflow-hidden bg-black shadow-inner',
-          containerWidth: 'w-[550px]',
-          containerHeight: 'h-[320px]',
-          viewportWidth: width,
-          viewportHeight: height,
-          displayWidth: 518, // 550px - padding
-          displayHeight: 288, // 320px - padding
-          hasNotch: false,
-          hasHomeIndicator: false,
+          containerClass: 'bg-gradient-to-b from-gray-800 to-gray-900 rounded-lg shadow-2xl relative border border-gray-700',
+          screenClass: 'rounded-md overflow-hidden bg-black shadow-inner',
+          targetWidth: 550,
+          targetHeight: 320,
           hasStand: true,
+          framePadding: 16,
         };
       default:
         return {
-          container: 'bg-gray-800 rounded-xl p-2 shadow-xl',
-          screen: 'rounded-lg overflow-hidden bg-black',
-          containerWidth: 'w-[300px]',
-          containerHeight: 'h-[200px]',
-          viewportWidth: width,
-          viewportHeight: height,
-          displayWidth: 284,
-          displayHeight: 184,
+          containerClass: 'bg-gray-800 rounded-xl shadow-xl',
+          screenClass: 'rounded-lg overflow-hidden bg-black',
+          targetWidth: 300,
+          targetHeight: 200,
+          framePadding: 8,
         };
     }
   };
 
-  const styles = getDeviceStyles();
+  const config = getDeviceConfig();
   
-  // حساب نسبة التصغير بناء على العرض
-  const scaleX = styles.displayWidth / styles.viewportWidth;
-  const scaleY = styles.displayHeight / styles.viewportHeight;
-  // استخدم أصغر نسبة للحفاظ على النسب الأصلية
+  // Calculate the available screen space inside the device frame
+  const screenWidth = config.targetWidth - (config.framePadding * 2);
+  const screenHeight = config.targetHeight - (config.framePadding * 2);
+  
+  // Calculate scale to fit the viewport inside the screen
+  const scaleX = screenWidth / width;
+  const scaleY = screenHeight / height;
   const scale = Math.min(scaleX, scaleY);
+  
+  // Calculate the actual display size of the scaled iframe
+  const scaledWidth = width * scale;
+  const scaledHeight = height * scale;
 
-  console.log(`${type} - Display: ${styles.displayWidth}x${styles.displayHeight}, Viewport: ${styles.viewportWidth}x${styles.viewportHeight}, Scale: ${scale}`);
+  console.log(`${type} - Target: ${config.targetWidth}x${config.targetHeight}, Screen: ${screenWidth}x${screenHeight}, Viewport: ${width}x${height}, Scale: ${scale}, Final: ${scaledWidth}x${scaledHeight}`);
 
   return (
     <div className="flex flex-col items-center group">
@@ -142,27 +134,34 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
       </div>
 
       {/* Device Container */}
-      <div className={`${styles.container} ${styles.containerWidth} ${styles.containerHeight} transition-all duration-300 hover:scale-105 hover:shadow-3xl`}>
+      <div 
+        className={`${config.containerClass} transition-all duration-300 hover:scale-105 hover:shadow-3xl`}
+        style={{
+          width: `${config.targetWidth}px`,
+          height: `${config.targetHeight}px`,
+          padding: `${config.framePadding}px`,
+        }}
+      >
         
         {/* Mobile Notch */}
-        {styles.hasNotch && (
+        {config.hasNotch && (
           <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-20 h-4 bg-black rounded-b-2xl z-10 shadow-lg">
             <div className="absolute top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-800 rounded-full"></div>
           </div>
         )}
         
         {/* Mobile Home Indicator */}
-        {styles.hasHomeIndicator && type === 'mobile' && (
+        {config.hasHomeIndicator && type === 'mobile' && (
           <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-white rounded-full opacity-80 z-10"></div>
         )}
 
         {/* iPad Home Indicator */}
-        {styles.hasHomeIndicator && type === 'tablet' && (
+        {config.hasHomeIndicator && type === 'tablet' && (
           <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gray-600 rounded-full z-10"></div>
         )}
 
         {/* Laptop Keyboard Base */}
-        {styles.hasKeyboard && (
+        {config.hasKeyboard && (
           <>
             <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-40 h-4 bg-gradient-to-b from-gray-300 to-gray-400 rounded-b-2xl border border-gray-400"></div>
             <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-32 h-2 bg-gray-400 rounded-sm"></div>
@@ -170,15 +169,21 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
         )}
 
         {/* Desktop Stand */}
-        {styles.hasStand && (
+        {config.hasStand && (
           <>
             <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 w-24 h-6 bg-gradient-to-b from-gray-700 to-gray-800 rounded-b-lg"></div>
             <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-32 h-3 bg-gray-800 rounded-lg"></div>
           </>
         )}
 
-        {/* Screen Content */}
-        <div className={`${styles.screen} w-full h-full relative`}>
+        {/* Screen Content - exact size to match scaled iframe */}
+        <div 
+          className={`${config.screenClass} relative`}
+          style={{
+            width: `${scaledWidth}px`,
+            height: `${scaledHeight}px`,
+          }}
+        >
           {/* Loading State */}
           {isLoading && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-900 z-20">
@@ -204,32 +209,23 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
             </div>
           )}
 
-          {/* الحاوي الذي يحدد المساحة المرئية */}
-          <div 
-            className="w-full h-full overflow-hidden relative"
+          {/* Iframe with exact scale transformation */}
+          <iframe
+            id={`iframe-${type}`}
+            src={url}
+            className="border-0 bg-white absolute top-0 left-0"
             style={{
-              width: `${styles.displayWidth}px`,
-              height: `${styles.displayHeight}px`,
+              width: `${width}px`,
+              height: `${height}px`,
+              transform: `scale(${scale})`,
+              transformOrigin: 'top left',
             }}
-          >
-            {/* الـ iframe بالحجم الحقيقي مع التصغير */}
-            <iframe
-              id={`iframe-${type}`}
-              src={url}
-              className="border-0 bg-white absolute top-0 left-0"
-              style={{
-                width: `${styles.viewportWidth}px`,
-                height: `${styles.viewportHeight}px`,
-                transform: `scale(${scale})`,
-                transformOrigin: 'top left',
-              }}
-              onLoad={handleLoad}
-              onError={handleError}
-              sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
-              loading="lazy"
-              title={`${deviceName} Preview`}
-            />
-          </div>
+            onLoad={handleLoad}
+            onError={handleError}
+            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
+            loading="lazy"
+            title={`${deviceName} Preview`}
+          />
         </div>
       </div>
     </div>
