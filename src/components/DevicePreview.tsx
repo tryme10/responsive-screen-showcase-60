@@ -8,22 +8,33 @@ interface DevicePreviewProps {
 
 export const DevicePreview = ({ url }: DevicePreviewProps) => {
   return (
-    <div className="space-y-16">
-      {/* Mobile and Tablet Row */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-12 justify-items-center">
-        {/* iPhone 15 Pro */}
-        <div className="flex justify-center">
+    <div className="w-full">
+      {/* All devices in one responsive grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-8 justify-items-center max-w-7xl mx-auto">
+        {/* Desktop */}
+        <div className="order-1 xl:order-1">
           <DeviceFrame
-            type="mobile"
+            type="desktop"
             url={url}
-            deviceName="iPhone 15 Pro"
-            width={420}
-            height={912}
+            deviceName="شاشة سطح المكتب"
+            width={1920}
+            height={1080}
           />
         </div>
         
+        {/* Laptop */}
+        <div className="order-2 xl:order-2">
+          <DeviceFrame
+            type="laptop"
+            url={url}
+            deviceName="MacBook Pro"
+            width={1280}
+            height={800}
+          />
+        </div>
+
         {/* iPad */}
-        <div className="flex justify-center">
+        <div className="order-3 xl:order-3">
           <DeviceFrame
             type="tablet"
             url={url}
@@ -32,28 +43,17 @@ export const DevicePreview = ({ url }: DevicePreviewProps) => {
             height={1024}
           />
         </div>
-      </div>
-
-      {/* Laptop Row */}
-      <div className="flex justify-center">
-        <DeviceFrame
-          type="laptop"
-          url={url}
-          deviceName="MacBook Pro"
-          width={1280}
-          height={800}
-        />
-      </div>
-
-      {/* Desktop Row */}
-      <div className="flex justify-center">
-        <DeviceFrame
-          type="desktop"
-          url={url}
-          deviceName="شاشة سطح المكتب"
-          width={1920}
-          height={1080}
-        />
+        
+        {/* iPhone 15 Pro */}
+        <div className="order-4 xl:order-4">
+          <DeviceFrame
+            type="mobile"
+            url={url}
+            deviceName="iPhone 15 Pro"
+            width={420}
+            height={912}
+          />
+        </div>
       </div>
     </div>
   );
