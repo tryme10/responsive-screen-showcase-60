@@ -43,7 +43,8 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
           containerHeight: '580px',
           iframeWidth: width,
           iframeHeight: height,
-          scale: 0.67 // Scale to fit in container
+          scale: 0.67,
+          transformOrigin: 'center center'
         };
       case 'tablet':
         return {
@@ -53,7 +54,8 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
           containerHeight: '550px',
           iframeWidth: width,
           iframeHeight: height,
-          scale: 0.52 // Scale to fit in container
+          scale: 0.52,
+          transformOrigin: 'center center'
         };
       case 'laptop':
         return {
@@ -63,7 +65,8 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
           containerHeight: '400px',
           iframeWidth: width,
           iframeHeight: height,
-          scale: 0.46 // Scale to fit in container
+          scale: 0.46,
+          transformOrigin: 'top left'
         };
       case 'desktop':
         return {
@@ -73,7 +76,8 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
           containerHeight: '420px',
           iframeWidth: width,
           iframeHeight: height,
-          scale: 0.36 // Scale to fit in container
+          scale: 0.36,
+          transformOrigin: 'top left'
         };
       default:
         return {
@@ -83,7 +87,8 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
           containerHeight: '300px',
           iframeWidth: width,
           iframeHeight: height,
-          scale: 0.5
+          scale: 0.5,
+          transformOrigin: 'center center'
         };
     }
   };
@@ -137,7 +142,7 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
           <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-48 h-4 bg-gray-700 rounded-b-xl"></div>
         )}
 
-        <div className={`${styles.screen} w-full h-full relative`}>
+        <div className={`${styles.screen} w-full h-full relative flex items-center justify-center`}>
           {isLoading && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-100 z-20">
               <div className="text-center">
@@ -162,11 +167,12 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
           )}
 
           <div 
-            className="origin-top-left"
+            className="flex items-center justify-center"
             style={{
               width: `${styles.iframeWidth}px`,
               height: `${styles.iframeHeight}px`,
               transform: `scale(${styles.scale})`,
+              transformOrigin: styles.transformOrigin,
             }}
           >
             <iframe
