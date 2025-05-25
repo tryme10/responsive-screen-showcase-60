@@ -41,7 +41,9 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
           screen: 'rounded-[2rem] overflow-hidden bg-white relative',
           containerWidth: 'w-[200px]',
           containerHeight: 'h-[400px]',
-          screenPadding: 'p-2'
+          iframeWidth: width,
+          iframeHeight: height,
+          scale: 0.45
         };
       case 'tablet':
         return {
@@ -49,7 +51,9 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
           screen: 'rounded-xl overflow-hidden bg-white',
           containerWidth: 'w-[280px]',
           containerHeight: 'h-[370px]',
-          screenPadding: 'p-1'
+          iframeWidth: width,
+          iframeHeight: height,
+          scale: 0.35
         };
       case 'laptop':
         return {
@@ -57,7 +61,9 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
           screen: 'rounded-lg overflow-hidden bg-white',
           containerWidth: 'w-[400px]',
           containerHeight: 'h-[250px]',
-          screenPadding: 'p-1'
+          iframeWidth: width,
+          iframeHeight: height,
+          scale: 0.3
         };
       case 'desktop':
         return {
@@ -65,7 +71,9 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
           screen: 'rounded-md overflow-hidden bg-white',
           containerWidth: 'w-[500px]',
           containerHeight: 'h-[280px]',
-          screenPadding: 'p-1'
+          iframeWidth: width,
+          iframeHeight: height,
+          scale: 0.25
         };
       default:
         return {
@@ -73,7 +81,9 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
           screen: 'rounded-lg overflow-hidden bg-white',
           containerWidth: 'w-[300px]',
           containerHeight: 'h-[200px]',
-          screenPadding: 'p-1'
+          iframeWidth: width,
+          iframeHeight: height,
+          scale: 0.3
         };
     }
   };
@@ -121,7 +131,7 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
           <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-3 bg-gray-700 rounded-b-xl"></div>
         )}
 
-        <div className={`${styles.screen} ${styles.screenPadding} w-full h-full relative`}>
+        <div className={`${styles.screen} w-full h-full relative overflow-hidden`}>
           {isLoading && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-100 z-20">
               <div className="text-center">
@@ -145,16 +155,24 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
             </div>
           )}
 
-          <iframe
-            id={`iframe-${type}`}
-            src={url}
-            className="w-full h-full border-0 bg-white rounded"
-            onLoad={handleLoad}
-            onError={handleError}
-            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
-            loading="lazy"
-            title={`${deviceName} Preview`}
-          />
+          <div className="w-full h-full flex items-center justify-center">
+            <iframe
+              id={`iframe-${type}`}
+              src={url}
+              className="border-0 bg-white origin-top-left"
+              style={{
+                width: `${styles.iframeWidth}px`,
+                height: `${styles.iframeHeight}px`,
+                transform: `scale(${styles.scale})`,
+                transformOrigin: 'top left'
+              }}
+              onLoad={handleLoad}
+              onError={handleError}
+              sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
+              loading="lazy"
+              title={`${deviceName} Preview`}
+            />
+          </div>
         </div>
       </div>
     </div>
