@@ -37,54 +37,62 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
     switch (type) {
       case 'mobile':
         return {
-          container: 'bg-gray-900 rounded-[2.5rem] p-2 shadow-2xl relative',
-          screen: 'rounded-[2rem] overflow-hidden bg-white relative',
-          containerWidth: 'w-[200px]',
-          containerHeight: 'h-[400px]',
-          // الأبعاد الحقيقية للشاشة
+          container: 'bg-gradient-to-b from-gray-800 to-gray-900 rounded-[2.5rem] p-2 shadow-2xl relative border-2 border-gray-700',
+          screen: 'rounded-[2rem] overflow-hidden bg-black relative',
+          containerWidth: 'w-[220px]',
+          containerHeight: 'h-[440px]',
           viewportWidth: width,
           viewportHeight: height,
-          // الأبعاد المرئية بعد التصغير
-          displayWidth: 184, // 200px - padding
-          displayHeight: 384, // 400px - padding
+          displayWidth: 200, // 220px - padding
+          displayHeight: 420, // 440px - padding
+          hasNotch: true,
+          hasHomeIndicator: true,
         };
       case 'tablet':
         return {
-          container: 'bg-gray-800 rounded-2xl p-3 shadow-2xl relative',
-          screen: 'rounded-xl overflow-hidden bg-white',
-          containerWidth: 'w-[280px]',
-          containerHeight: 'h-[370px]',
+          container: 'bg-gradient-to-b from-gray-200 to-gray-300 rounded-2xl p-4 shadow-2xl relative border border-gray-300',
+          screen: 'rounded-xl overflow-hidden bg-black shadow-inner',
+          containerWidth: 'w-[320px]',
+          containerHeight: 'h-[420px]',
           viewportWidth: width,
           viewportHeight: height,
-          displayWidth: 256, // 280px - padding
-          displayHeight: 346, // 370px - padding
+          displayWidth: 288, // 320px - padding
+          displayHeight: 388, // 420px - padding
+          hasNotch: false,
+          hasHomeIndicator: true,
         };
       case 'laptop':
         return {
-          container: 'bg-gray-800 rounded-t-2xl rounded-b-3xl p-2 pb-6 shadow-2xl relative',
-          screen: 'rounded-lg overflow-hidden bg-white',
-          containerWidth: 'w-[400px]',
-          containerHeight: 'h-[250px]',
-          viewportWidth: width,
-          viewportHeight: height,
-          displayWidth: 384, // 400px - padding
-          displayHeight: 226, // 250px - padding
-        };
-      case 'desktop':
-        return {
-          container: 'bg-gray-900 rounded-lg p-3 shadow-2xl relative',
-          screen: 'rounded-md overflow-hidden bg-white',
-          containerWidth: 'w-[500px]',
+          container: 'bg-gradient-to-b from-gray-300 to-gray-400 rounded-t-2xl rounded-b-3xl p-3 pb-8 shadow-2xl relative border border-gray-400',
+          screen: 'rounded-lg overflow-hidden bg-black shadow-inner border border-gray-600',
+          containerWidth: 'w-[450px]',
           containerHeight: 'h-[280px]',
           viewportWidth: width,
           viewportHeight: height,
-          displayWidth: 476, // 500px - padding
-          displayHeight: 256, // 280px - padding
+          displayWidth: 438, // 450px - padding
+          displayHeight: 254, // 280px - padding
+          hasNotch: false,
+          hasHomeIndicator: false,
+          hasKeyboard: true,
+        };
+      case 'desktop':
+        return {
+          container: 'bg-gradient-to-b from-gray-800 to-gray-900 rounded-lg p-4 shadow-2xl relative border border-gray-700',
+          screen: 'rounded-md overflow-hidden bg-black shadow-inner',
+          containerWidth: 'w-[550px]',
+          containerHeight: 'h-[320px]',
+          viewportWidth: width,
+          viewportHeight: height,
+          displayWidth: 518, // 550px - padding
+          displayHeight: 288, // 320px - padding
+          hasNotch: false,
+          hasHomeIndicator: false,
+          hasStand: true,
         };
       default:
         return {
           container: 'bg-gray-800 rounded-xl p-2 shadow-xl',
-          screen: 'rounded-lg overflow-hidden bg-white',
+          screen: 'rounded-lg overflow-hidden bg-black',
           containerWidth: 'w-[300px]',
           containerHeight: 'h-[200px]',
           viewportWidth: width,
@@ -106,63 +114,89 @@ export const DeviceFrame = ({ type, url, deviceName, width, height }: DeviceFram
   console.log(`${type} - Display: ${styles.displayWidth}x${styles.displayHeight}, Viewport: ${styles.viewportWidth}x${styles.viewportHeight}, Scale: ${scale}`);
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="mb-3">
-        <h3 className="text-sm font-semibold text-gray-800 mb-1 text-center">{deviceName}</h3>
-        <div className="flex justify-center gap-2 items-center">
-          <span className="text-xs text-gray-500 font-mono">{width} × {height}</span>
+    <div className="flex flex-col items-center group">
+      {/* Device Header */}
+      <div className="mb-4 text-center">
+        <h3 className="text-lg font-bold text-gray-800 mb-2">{deviceName}</h3>
+        <div className="flex justify-center gap-3 items-center">
+          <span className="text-sm text-gray-500 font-mono bg-gray-100 px-2 py-1 rounded">
+            {width} × {height}
+          </span>
           <button
             onClick={handleRefresh}
-            className="text-blue-600 hover:text-blue-800 transition-colors p-1 hover:bg-blue-50 rounded"
-            title="تحديث"
+            className="text-blue-600 hover:text-blue-800 transition-colors p-2 hover:bg-blue-50 rounded-lg shadow-sm border border-gray-200"
+            title="إعادة تحميل"
           >
-            <RefreshCw size={14} />
+            <RefreshCw size={16} />
           </button>
           <a
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-600 hover:text-blue-800 transition-colors p-1 hover:bg-blue-50 rounded"
+            className="text-blue-600 hover:text-blue-800 transition-colors p-2 hover:bg-blue-50 rounded-lg shadow-sm border border-gray-200"
             title="فتح في نافذة جديدة"
           >
-            <ExternalLink size={14} />
+            <ExternalLink size={16} />
           </a>
         </div>
       </div>
 
-      <div className={`${styles.container} ${styles.containerWidth} ${styles.containerHeight} transition-transform hover:scale-105`}>
-        {/* Device notch for mobile */}
-        {type === 'mobile' && (
-          <div className="absolute top-1 left-1/2 transform -translate-x-1/2 w-16 h-3 bg-black rounded-b-xl z-10"></div>
+      {/* Device Container */}
+      <div className={`${styles.container} ${styles.containerWidth} ${styles.containerHeight} transition-all duration-300 hover:scale-105 hover:shadow-3xl`}>
+        
+        {/* Mobile Notch */}
+        {styles.hasNotch && (
+          <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-20 h-4 bg-black rounded-b-2xl z-10 shadow-lg">
+            <div className="absolute top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-800 rounded-full"></div>
+          </div>
         )}
         
-        {/* Home indicator for mobile */}
-        {type === 'mobile' && (
-          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-white rounded-full opacity-60"></div>
+        {/* Mobile Home Indicator */}
+        {styles.hasHomeIndicator && type === 'mobile' && (
+          <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-white rounded-full opacity-80 z-10"></div>
         )}
 
-        {/* Laptop base */}
-        {type === 'laptop' && (
-          <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-3 bg-gray-700 rounded-b-xl"></div>
+        {/* iPad Home Indicator */}
+        {styles.hasHomeIndicator && type === 'tablet' && (
+          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gray-600 rounded-full z-10"></div>
         )}
 
+        {/* Laptop Keyboard Base */}
+        {styles.hasKeyboard && (
+          <>
+            <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-40 h-4 bg-gradient-to-b from-gray-300 to-gray-400 rounded-b-2xl border border-gray-400"></div>
+            <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-32 h-2 bg-gray-400 rounded-sm"></div>
+          </>
+        )}
+
+        {/* Desktop Stand */}
+        {styles.hasStand && (
+          <>
+            <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 w-24 h-6 bg-gradient-to-b from-gray-700 to-gray-800 rounded-b-lg"></div>
+            <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-32 h-3 bg-gray-800 rounded-lg"></div>
+          </>
+        )}
+
+        {/* Screen Content */}
         <div className={`${styles.screen} w-full h-full relative`}>
+          {/* Loading State */}
           {isLoading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-100 z-20">
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-900 z-20">
               <div className="text-center">
-                <RefreshCw className="w-6 h-6 animate-spin text-blue-600 mx-auto mb-1" />
-                <p className="text-gray-600 text-xs">جاري التحميل...</p>
+                <RefreshCw className="w-8 h-8 animate-spin text-blue-400 mx-auto mb-2" />
+                <p className="text-gray-300 text-sm">جاري التحميل...</p>
               </div>
             </div>
           )}
 
+          {/* Error State */}
           {error && (
-            <div className="absolute inset-0 flex items-center justify-center bg-red-50 z-20">
-              <div className="text-center p-2">
-                <p className="text-red-600 mb-1 text-xs">خطأ في التحميل</p>
+            <div className="absolute inset-0 flex items-center justify-center bg-red-900 z-20">
+              <div className="text-center p-4">
+                <p className="text-red-300 mb-2 text-sm">خطأ في التحميل</p>
                 <button
                   onClick={handleRefresh}
-                  className="text-blue-600 hover:text-blue-800 underline text-xs"
+                  className="text-blue-400 hover:text-blue-300 underline text-sm bg-red-800 px-3 py-1 rounded"
                 >
                   إعادة المحاولة
                 </button>
